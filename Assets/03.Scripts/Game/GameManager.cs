@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Runtime.Serialization;
 //여기서 게임 상태 정의 
 //하나의 큰 유한 상태 머신 만들 예정
 public enum GamePatternState
@@ -25,40 +27,15 @@ public enum GamePatternState
 
 public class GameManager : MonoBehaviour
 {
-    private GameState activeState;
-    private ObjectManager objectManager;
-    private ScrollManager scrollManager;
-    private Dictionary<GamePatternState, GameState> states;
-    private PlayerController pc;
-    private GamePatternState currentPattern;
-    private SITime time;
-
-    public delegate void OnVideoEndedDelegate();
-
-    OnVideoEndedDelegate onVideoEnded;
-    [SerializeField] 
-    GameObject mainDialoguePanel;
-
     [SerializeField]
-    VideoPlayerController videoController;
+    protected DotController dot;
 
-    [SerializeField]
-    GameObject subDialoguePanel;
+    protected GameState activeState;
 
-    [SerializeField]
-    private DotController dot;
-
-    [SerializeField]
-    Slider loadingProgressBar;
-
-    public GamePatternState Pattern
-    {
-        get { return currentPattern; }
-    }
-    public int Chapter
-    {
-        get { return pc.GetChapter(); }
-    }
+    protected SITime time;
+    protected ObjectManager objectManager;
+    protected ScrollManager scrollManager;
+    protected GamePatternState currentPattern;
 
     public ObjectManager ObjectManager
     {
@@ -79,8 +56,36 @@ public class GameManager : MonoBehaviour
     {
         get { return time.ToString(); }
     }
+    public GamePatternState Pattern
+    {
+        get { return currentPattern; }
+    }
+    private Dictionary<GamePatternState, GameState> states;
+    private PlayerController pc;
 
-    GameManager()
+
+    public delegate void OnVideoEndedDelegate();
+
+    OnVideoEndedDelegate onVideoEnded;
+    [SerializeField]
+    GameObject mainDialoguePanel;
+
+    [SerializeField]
+    VideoPlayerController videoController;
+
+    [SerializeField]
+    GameObject subDialoguePanel;
+
+    [SerializeField]
+    Slider loadingProgressBar;
+
+    public int Chapter
+    {
+        get { return pc.GetChapter(); }
+    }
+
+
+    protected GameManager()
     {
         states = new Dictionary<GamePatternState, GameState>();
 
@@ -115,8 +120,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //Player 단계를 가져온다.
-        
-        if(mainDialoguePanel)
+
+        if (mainDialoguePanel)
         {
             mainDialoguePanel.GetComponent<MainPanel>().InitializePanels();
         }
@@ -127,27 +132,27 @@ public class GameManager : MonoBehaviour
 
     public void OnValueChanged(float value)
     {
-        if(value >= 1f)
+        if (value >= 1f)
         {
-            Invoke("CloseLoading",1f);
+            Invoke("CloseLoading", 1f);
         }
     }
 
     public void OnVideoCompleted()
     {
         //정리
-        if(currentPattern == GamePatternState.Play)
+        if (currentPattern == GamePatternState.Play)
         {
-            videoController.CloseVideo(EVideoIdx.SkipSleeping,true);
+            videoController.CloseVideo(EVideoIdx.SkipSleeping, true);
         }
         else
         {
-            videoController.CloseVideo(EVideoIdx.SkipPhase,false);
+            videoController.CloseVideo(EVideoIdx.SkipPhase, false);
         }
     }
     void CloseLoading()
     {
-        if(loadingProgressBar != null)
+        if (loadingProgressBar != null)
         {
             loadingProgressBar.transform.parent.gameObject.SetActive(false);
         }
@@ -157,7 +162,7 @@ public class GameManager : MonoBehaviour
     {
         dot.GoSleep();
     }
-        
+
     public void NextPhase()
     {
         pc.NextPhase();
@@ -167,10 +172,10 @@ public class GameManager : MonoBehaviour
     {
         if (states == null) return;
 
-        if(states.ContainsKey(patternState) == false)
+        if (states.ContainsKey(patternState) == false)
         {
             Debug.Log("없는 패턴 입니다.");
-            return; 
+            return;
         }
         if (activeState != null)
         {
@@ -191,7 +196,7 @@ public class GameManager : MonoBehaviour
 
     public void StartMain()
     {
-        MainDialogue mainState= (MainDialogue)activeState;
+        MainDialogue mainState = (MainDialogue)activeState;
         string fileName = "main_ch" + Chapter;
         if (mainState != null)
         {
@@ -199,7 +204,7 @@ public class GameManager : MonoBehaviour
             {
                 mainDialoguePanel.SetActive(true);
             }
-            
+
             mainState.StartMain(this, fileName);
         }
     }
@@ -227,7 +232,6 @@ public class GameManager : MonoBehaviour
             time = SITime.Night;
         }
 
-        time = SITime.Night;
         OnVideoCompleted(); //미리 데이터 로드
         StartCoroutine(LoadDataAsync());
     }
@@ -242,7 +246,7 @@ public class GameManager : MonoBehaviour
 
         ResourceRequest loadOperation = Resources.LoadAsync<GameObject>("Background/" + time.ToString());
 
-        while(!loadOperation.isDone)
+        while (!loadOperation.isDone)
         {
             totalProgress = loadOperation.progress * backgroundLoadWeight;
             loadingProgressBar.value = totalProgress;
@@ -261,7 +265,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 풀을 채우는 등 나머지 작업을 수행
-        Coroutine objectLoadCoroutine = StartCoroutine(TrackObjectLoadProgress(time.ToString(), pc.GetChapter(),objectLoadWeight));
+        Coroutine objectLoadCoroutine = StartCoroutine(TrackObjectLoadProgress(time.ToString(), pc.GetChapter(), objectLoadWeight));
 
         foreach (var state in states)
         {
@@ -302,7 +306,10 @@ public class GameManager : MonoBehaviour
         loadingProgressBar.value += weight;
     }
 
-
+    public void SceneTutorial()
+    {
+        SceneManager.LoadScene("Tutorial");
+    }
     //준현아 서브 끝나고 나서 showSubDial 을 바로 호출하면, 알아서 n분 대기 후 또 등장할거야 
     //서브가 있든 없든 호출 ㄱㄱ 없으면, Interface상에 걸려서 이전 했던 행동 하고 끝낼겨
     public void ShowSubDial()
@@ -311,11 +318,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SubDialog(dot));
     }
 
-
     IEnumerator SubDialog(DotController dot = null)
     {
         if (dot.GetSubScriptListCount(Pattern) == 0)
-        {   
+        {
             //sub가 끝나면 Sleeping에 대한 동작을 수행하겠지...
             //현재 패턴에 대해 더이상 없으면... 
             IResetStateInterface resetState = CurrentState as IResetStateInterface;
@@ -337,14 +343,15 @@ public class GameManager : MonoBehaviour
         ScriptList script = dot.GetSubScriptList(Pattern); //현재 몇번째 서브 진행중인지 체크
 
         DotPatternState dotPattern;
+
+        Debug.Log(script.AnimState + " Sub 진행중");
         if (Enum.TryParse(script.AnimState, true, out dotPattern))
         {
 
             dot.ChangeState(dotPattern, script.DotAnim, script.DotPosition);
             dot.TriggerSub(true);
         }
-        
-    }
 
+    }
 }
 

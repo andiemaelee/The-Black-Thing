@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum EMoonChacter
@@ -20,12 +21,12 @@ struct BubblePrefab
     [SerializeField]
     public GameObject prefab;
 }
-public class MoonChatClickController : MonoBehaviour, IChatInterface
+public class MoonChatClickController : MonoBehaviour, IPointerDownHandler
 {
     // Start is called before the first frame update
     [SerializeField]
     List<BubblePrefab> pref;
-
+    
     [SerializeField]
     List<GameObject> radioScript;
 
@@ -76,7 +77,7 @@ public class MoonChatClickController : MonoBehaviour, IChatInterface
         {
             GameObject moonRadioObj = Instantiate(pref[(int)Dial[i].Actor].prefab, this.transform);
 
-            moonRadioObj.GetComponent<ChatAreaScript>().SettingText(Dial[i].KorText,this);
+            moonRadioObj.GetComponent<ChatAreaScript>().SettingText(Dial[i].KorText);
             moonRadioObj.SetActive(false);
 
             if (i == 0)
@@ -86,6 +87,10 @@ public class MoonChatClickController : MonoBehaviour, IChatInterface
 
             radioScript.Add(moonRadioObj);
         }
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        RunScript();
     }
 
     public void RunScript()

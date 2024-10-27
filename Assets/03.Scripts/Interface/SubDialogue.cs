@@ -148,7 +148,9 @@ public class SubDialogue : MonoBehaviour
         subdata.TextType = SubDialogueEntries[idx].TextType;
         subdata.Text = SubDialogueEntries[idx].KorText;
         subdata.Color = SubDialogueEntries[idx].Color;
-
+        subdata.DotAnim = SubDialogueEntries[idx].DotAnim;
+        //여기서 dot 값을 변경할 예정
+        Debug.Log("SubDialogueEntries[idx].DotAnim 여기 변경변경");
         //이 Text안에서 <name>이 있을 경우 변경
         subdata.NextLineKey = SubDialogueEntries[idx].NextLineKey;
 

@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 1335984788
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: night
+      Dependencies: {}
+    Info_1:
+      Name: morning
+      Dependencies: {}
+    Info_2:
+      Name: even
+      Dependencies:
+        Dependency_0: down
+    Info_3:
+      Name: down
+      Dependencies: {}

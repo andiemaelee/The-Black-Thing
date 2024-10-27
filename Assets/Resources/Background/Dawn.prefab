@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1559980160048066667
 Transform:
   m_ObjectHideFlags: 0
@@ -129,6 +129,7 @@ MonoBehaviour:
   moonRadioController: {fileID: 0}
   alert: {fileID: 8246294704905778114}
   text: {fileID: 8704255721327171469}
+  screen: {fileID: 0}
 --- !u!95 &1559980160048066666
 Animator:
   serializedVersion: 5
@@ -545,7 +546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3812197862291972429
 Transform:
   m_ObjectHideFlags: 0
@@ -652,6 +653,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDoorOpen: 1
+  dot: {fileID: 0}
+  targetCollider: {fileID: 3812197862291972431}
 --- !u!1 &3812197863392252538
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +780,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDoorOpen: 0
+  dot: {fileID: 0}
+  targetCollider: {fileID: 3812197863392252541}
 --- !u!1 &3812197863770199420
 GameObject:
   m_ObjectHideFlags: 0
@@ -1808,7 +1813,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6872379938713600412
 Transform:
   m_ObjectHideFlags: 0

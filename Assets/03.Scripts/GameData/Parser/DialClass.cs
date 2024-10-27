@@ -15,6 +15,7 @@ namespace Assets.Script.DialClass
         public int LineKey;
         public int Color;
         public string Actor;
+        public string DotAnim;
         public string TextType;
         public string Text;
         public string NextLineKey;

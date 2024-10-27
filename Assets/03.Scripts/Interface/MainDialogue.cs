@@ -147,7 +147,8 @@ public abstract class MainDialogue : GameState, ILoadingInterface
         //배경화면이 켜질 때, 뭉치의 위치도 고장한다.
         //파라미터로 배경값을 전달하면 된다.
         //Day 7을 제외하곤 모두 배경값을 Enter에서 수정하면 되고, 데이 7일때만 변경해준다.
-        SystemUI.SetActive(false);
+        if (SystemUI)
+            SystemUI.SetActive(false);
     }
     public override void Exit(GameManager manager)
     {
